@@ -2,6 +2,8 @@
  * Create a list that holds all of your cards
  */
 const allCardList = document.querySelectorAll('.card');
+let openCardList = [];
+let cardMatched = false;
 for (let card of allCardList) {
   card.addEventListener('click', showCard);
 }
@@ -28,10 +30,27 @@ function shuffle(array) {
     return array;
 }
 function showCard(event){
-    event.target.classList.toggle('open');
-    event.target.classList.toggle('show');
-
+    event.target.classList.add('open', 'show');
+    setTimeout(checkMatchCard(event), 0);
 }
+function checkMatchCard(event){
+   openCardList.push(event.target);
+   for(let openCard of openCardList){
+      if(openCardList.length == 2){
+         if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
+           console.log(openCardList[0]);
+           console.log(openCardList[1]);
+           openCardList[0].classList.remove('open', 'show');
+           openCardList[1].classList.remove('open', 'show');
+         }
+         else{
+           openCardList[0].classList.add('match');
+           openCardList[1].classList.add('match');
+         }
+         openCardList = [];
+       }
+     }
+   }
 
 
 
