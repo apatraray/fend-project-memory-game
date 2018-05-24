@@ -31,11 +31,9 @@ function shuffle(array) {
 }
 function showCard(event){
     event.target.classList.add('open', 'show');
-    setTimeout(checkMatchCard(event), 0);
-}
-function checkMatchCard(event){
-   openCardList.push(event.target);
-   for(let openCard of openCardList){
+    setTimeout(function checkMatchCard(){
+    openCardList.push(event.target);
+    for(let openCard of openCardList){
       if(openCardList.length == 2){
          if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
            console.log(openCardList[0]);
@@ -50,7 +48,8 @@ function checkMatchCard(event){
          openCardList = [];
        }
      }
-   }
+   }, 1000);
+ }
 
 
 
