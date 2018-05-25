@@ -36,12 +36,16 @@ function initGame(){
 }
 initGame();
 const allCardList = document.querySelectorAll('.card');
+const moves = document.querySelector('.moves');
 let openCardList = [];
 let NumberOfCardMatchedPair = 0;
+let NumberOfMoves = 0;
 allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
 });
 function showCard(event){
+    NumberOfMoves++;
+    moves.innerText = NumberOfMoves;
     event.target.classList.add('open', 'show');
     setTimeout(function checkMatchCard(){
     openCardList.push(event.target);
@@ -67,6 +71,7 @@ function showCard(event){
    }, 1000);
  }
 //if clicked same card twice
+//add effect when card got matched or unmatched.
 
 /*
  * set up the event listener for a card. If a card is clicked:
