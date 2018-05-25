@@ -1,12 +1,10 @@
 /*
  * Create a list that holds all of your cards
  */
-const allCardList = document.querySelectorAll('.card');
-let openCardList = [];
-let cardMatched = false;
-for (let card of allCardList) {
-  card.addEventListener('click', showCard);
-}
+const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o',
+              'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt',
+              'fa-cube', 'fa-cube', 'fa-anchor', 'fa-anchor',
+              'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle'];
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -15,7 +13,6 @@ for (let card of allCardList) {
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
-//const openCard = document.querySelector('.card');
 
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -29,29 +26,47 @@ function shuffle(array) {
     }
     return array;
 }
+function initGame(){
+    const gameDeck = document.querySelector('.deck');
+    shuffle(cards);
+    const cardHtml = cards.map(function getCardTemplate(card){
+      return `<li class="card"><i class="fa ${card}"></i></li>`;
+    });
+    gameDeck.innerHTML = cardHtml.join(' ');
+}
+initGame();
+const allCardList = document.querySelectorAll('.card');
+let openCardList = [];
+let NumberOfCardMatchedPair = 0;
+allCardList.forEach(function(card){
+    card.addEventListener('click', showCard);
+});
 function showCard(event){
     event.target.classList.add('open', 'show');
     setTimeout(function checkMatchCard(){
     openCardList.push(event.target);
-    for(let openCard of openCardList){
-      if(openCardList.length == 2){
-         if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
-           console.log(openCardList[0]);
-           console.log(openCardList[1]);
-           openCardList[0].classList.remove('open', 'show');
-           openCardList[1].classList.remove('open', 'show');
-         }
-         else{
-           openCardList[0].classList.add('match');
-           openCardList[1].classList.add('match');
+    openCardList.forEach(function(card){
+        if(openCardList.length == 2){
+           if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
+               console.log(openCardList[0]);
+               console.log(openCardList[1]);
+               openCardList[0].classList.remove('open', 'show');
+               openCardList[1].classList.remove('open', 'show');
+           }
+           else{
+               openCardList[0].classList.add('match');
+               openCardList[1].classList.add('match');
+               NumberOfCardMatchedPair++;
+               if(NumberOfCardMatchedPair == 8){
+                   console.log('all cards are mathched');//implement modal
+            }
          }
          openCardList = [];
        }
-     }
+     });
    }, 1000);
  }
-
-
+//if clicked same card twice
 
 /*
  * set up the event listener for a card. If a card is clicked:
