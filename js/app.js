@@ -16,7 +16,6 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
 
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
@@ -37,12 +36,22 @@ function initGame(){
 initGame();
 const allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
+const restart = document.querySelector('.fa-repeat');
 let openCardList = [];
 let NumberOfCardMatchedPair = 0;
 let NumberOfMoves = 0;
+let cardMatchedPairPerMoves = 0;
+restart.addEventListener('click', restartGame);
 allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
 });
+function restartGame(){
+    NumberOfMoves = 0;
+    moves.innerText = NumberOfMoves;
+    allCardList.forEach(function(card){
+      card.classList.remove('open', 'show', 'match');
+    });
+}
 function showCard(event){
     NumberOfMoves++;
     moves.innerText = NumberOfMoves;
@@ -52,8 +61,6 @@ function showCard(event){
     openCardList.forEach(function(card){
         if(openCardList.length == 2){
            if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
-               console.log(openCardList[0]);
-               console.log(openCardList[1]);
                openCardList[0].classList.remove('open', 'show');
                openCardList[1].classList.remove('open', 'show');
            }
@@ -61,17 +68,21 @@ function showCard(event){
                openCardList[0].classList.add('match');
                openCardList[1].classList.add('match');
                NumberOfCardMatchedPair++;
+               cardMatchedPairPerMoves = NumberOfCardMatchedPair/NumberOfMoves;
                if(NumberOfCardMatchedPair == 8){
                    console.log('all cards are mathched');//implement modal
             }
          }
+         openCardList[0].classList.add('shake');
+         openCardList[1].classList.add('shake');
          openCardList = [];
        }
      });
    }, 1000);
  }
 //if clicked same card twice
-//add effect when card got matched or unmatched.
+//star should display correctly
+//Timer should start when player starts a game
 
 /*
  * set up the event listener for a card. If a card is clicked:
