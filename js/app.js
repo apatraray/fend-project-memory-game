@@ -3,7 +3,7 @@
  */
 const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o',
               'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt',
-              'fa-cube', 'fa-cube', 'fa-anchor', 'fa-anchor',
+              'fa-cube', 'fa-cube', 'fa-bomb', 'fa-bomb',
               'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle'];
 const timer = document.querySelector('.timer');
 /*
@@ -44,7 +44,7 @@ let NumberOfMoves = 0;
 let cardMatchedPairPerMoves = 0;
 restart.addEventListener('click', restartGame);
 allCardList.forEach(function(card){
-    card.addEventListener('click', showCard, true);
+    card.addEventListener('click', showCard);
 });
 function restartGame(){
     NumberOfMoves = 0;
@@ -60,10 +60,14 @@ function showCard(event){
     setTimeout(function checkMatchCard(){
     openCardList.push(event.target);
     openCardList.forEach(function(card){
-        if(openCardList.length == 2){
+        if(openCardList.length == 1){
+           event.target.removeEventListener('click', showCard);
+        }
+        else if(openCardList.length == 2){
            if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
                openCardList[0].classList.remove('open', 'show');
                openCardList[1].classList.remove('open', 'show');
+               openCardList[0].addEventListener('click', showCard);
            }
            else{
                openCardList[0].classList.add('match');
@@ -73,6 +77,7 @@ function showCard(event){
                if(NumberOfCardMatchedPair == 8){
                    console.log('all cards are mathched');//implement modal
             }
+            openCardList[1].removeEventListener('click', showCard);
          }
          openCardList[0].classList.add('shake');
          openCardList[1].classList.add('shake');
@@ -113,7 +118,7 @@ function showCard(event){
      elapsedString = "0"+startMin+":"+"0"+startSec;
    }
    timer.innerHTML = elapsedString;
-   if (totalSec > 300) {
+   if (totalSec > 180) {
      clearInterval(x);
      timer.innerHTML = '00:00';
      //Display modal game over.
