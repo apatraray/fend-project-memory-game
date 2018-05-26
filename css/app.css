@@ -122,6 +122,9 @@ h1 {
 .score-panel .stars li {
     list-style: none;
     display: inline-block;
+}
+
+.score-panel .stars li .checked{
     color: darkorange;
 }
 

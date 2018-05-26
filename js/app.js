@@ -38,10 +38,41 @@ initGame();
 const allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
 const restart = document.querySelector('.fa-repeat');
+const stars = document.querySelector('.stars');
 let openCardList = [];
 let NumberOfCardMatchedPair = 0;
 let NumberOfMoves = 0;
 let cardMatchedPairPerMoves = 0;
+let cardMatched = 2;
+let seconds = 60;
+let number=stars.children.length -1;
+//start timer when game starts
+let startSec = 0;
+let totalSec = 0;
+let startMin = 0;
+let elapsedString = " ";
+let x = setInterval(function(){
+  startSec++;
+  totalSec++;
+  if(startSec > 60){
+     startMin++;
+     startSec = 0;
+  }
+  if(startSec > 9) {
+    elapsedString = "0"+startMin+":"+startSec;
+  }
+  else {
+    elapsedString = "0"+startMin+":"+"0"+startSec;
+  }
+  timer.innerHTML = elapsedString;
+  if (totalSec > 180) {
+    clearInterval(x);
+    timer.innerHTML = '00:00';
+    //Display modal game over.
+  }
+  updateStars();
+}, 1000);
+
 restart.addEventListener('click', restartGame);
 allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
@@ -73,7 +104,6 @@ function showCard(event){
                openCardList[0].classList.add('match');
                openCardList[1].classList.add('match');
                NumberOfCardMatchedPair++;
-               cardMatchedPairPerMoves = NumberOfCardMatchedPair/NumberOfMoves;
                if(NumberOfCardMatchedPair == 8){
                    console.log('all cards are mathched');//implement modal
             }
@@ -86,10 +116,19 @@ function showCard(event){
      });
    }, 1000);
  }
-//if clicked same card twice
+ function updateStars(){
+   if(NumberOfCardMatchedPair < cardMatched && totalSec >= seconds){
+      stars.children[number].firstChild.classList.remove('checked');
+      cardMatched += 3;
+      seconds += 60;
+      number--;
+   }
+ }
 //star should display correctly
-//Timer should start when player starts a game
+//add modal
+//add timer restart to restart link
 //add responsiveness
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -100,27 +139,3 @@ function showCard(event){
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
- let startSec = 0;
- let totalSec = 0;
- let startMin = 0;
- let elapsedString = " ";
- let x = setInterval(function(){
-   startSec++;
-   totalSec++;
-   if(startSec > 60){
-      startMin++;
-      startSec = 0;
-   }
-   if(startSec > 9) {
-     elapsedString = "0"+startMin+":"+startSec;
-   }
-   else {
-     elapsedString = "0"+startMin+":"+"0"+startSec;
-   }
-   timer.innerHTML = elapsedString;
-   if (totalSec > 180) {
-     clearInterval(x);
-     timer.innerHTML = '00:00';
-     //Display modal game over.
-   }
- }, 1000);
