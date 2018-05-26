@@ -131,3 +131,9 @@ h1 {
     color: darkorange;
     font-size: 1.5em;
 }
+.score-panel .timer {
+    position: fixed;
+    left: 50%;
+    color: brown;
+    font-size: 1em;
+}
