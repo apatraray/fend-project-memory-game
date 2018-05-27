@@ -12,9 +12,7 @@ const timer = document.querySelector('.timer');
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
-
 // Shuffle function from http://stackoverflow.com/a/2450976
-
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
     while (currentIndex !== 0) {
@@ -26,6 +24,7 @@ function shuffle(array) {
     }
     return array;
 }
+
 function initGame(){
     const gameDeck = document.querySelector('.deck');
     shuffle(cards);
@@ -35,6 +34,7 @@ function initGame(){
     gameDeck.innerHTML = cardHtml.join(' ');
 }
 initGame();
+
 const allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
 const restart = document.querySelector('.fa-repeat');
@@ -43,12 +43,14 @@ const winBox = document.querySelector('#winBox');
 const failBox = document.querySelector('#failBox');
 const closeList = document.querySelectorAll('.close');
 const modalList = document.querySelectorAll('.modal');
+const winningTime = document.querySelector('.winningTime');
+const winningStars = document.querySelector('.winningStars');
 let openCardList = [];
 let NumberOfCardMatchedPair = 0;
 let NumberOfMoves = 0;
 let cardMatched = 2;
 let seconds = 40;
-let number=stars.children.length -1;
+let starNumber=stars.children.length -1;
 let isWinner = false;
 closeList.forEach(function(close){
     close.addEventListener('click', closeModal);
@@ -76,6 +78,11 @@ let x = setInterval(function(){
     elapsedString = "0"+startMin+":"+"0"+startSec;
   }
   timer.innerHTML = elapsedString;
+  if(isWinner){
+      clearInterval(x);
+      winningTime.innerHTML = elapsedString;
+      winningStars.innerHTML = starNumber + 1;
+  }
   if (totalSec > 120) {
     clearInterval(x);
     timer.innerHTML = '00:00';
@@ -87,15 +94,21 @@ let x = setInterval(function(){
 }, 1000);
 }
 addTimer();
+
 restart.addEventListener('click', restartGame);
 allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
 });
+
 function restartGame(){
     NumberOfMoves = 0;
     moves.innerText = NumberOfMoves;
     allCardList.forEach(function(card){
-      card.classList.remove('open', 'show', 'match');
+      if(card.classList.contains('open')|| card.classList.contains('show') ||
+       card.classList.contains('match')){
+          card.addEventListener('click', showCard);
+          card.classList.remove('open', 'show', 'match');
+      }
     });
 }
 
@@ -134,10 +147,10 @@ function showCard(event){
  }
  function updateStars(){
    if(NumberOfCardMatchedPair < cardMatched && totalSec >= seconds){
-      stars.children[number].firstChild.classList.remove('checked');
+      stars.children[starNumber].firstChild.classList.remove('checked');
       cardMatched += 3;
       seconds += 40;
-      number--;
+      starNumber--;
    }
  }
 
