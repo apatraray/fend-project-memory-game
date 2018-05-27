@@ -18,7 +18,7 @@ body {
 
 body {
     background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
-    font-family: 'Coda', cursive;
+    font-family: "Coda", cursive;
 }
 
 .container {
@@ -31,7 +31,7 @@ body {
 }
 
 h1 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-weight: 350;
     color: #b942f4;
 }
@@ -69,7 +69,6 @@ h1 {
 }
 
 .deck .card.open {
-    transform: rotateY(180);
     background: #02b3e4;
     cursor: default;
 }
@@ -129,7 +128,7 @@ h1 {
     display: inline-block;
 }
 
-.score-panel .stars li .checked{
+.score-panel .stars li .checked {
     color: darkorange;
 }
 
@@ -176,25 +175,25 @@ h1 {
 
 /* The Close Button */
 .close {
-    color: #aaaaaa;
+    color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-#winBox {
+#win-box {
     background-color: lightgreen;
 }
 
-#failBox {
+#fail-box {
     background-color: #f97e72;
 }
 
-.winningTime {
+.win-time {
     color: red;
 }
 
-.winningStars {
+.win-stars {
     color: red;
 }
 
@@ -210,12 +209,14 @@ h1 {
         left: 50%;
     }
 }
+
 @media only screen and (min-width: 665px) {
     .deck {
         width: 600px;
     }
 }
-@media only screen and (min-width: 350px) and (max-width: 665px){
+
+@media only screen and (min-width: 350px) and (max-width: 665px) {
     .deck {
         width: 300px;
     }
