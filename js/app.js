@@ -52,6 +52,7 @@ let cardMatched = 2;
 let seconds = 40;
 let starNumber=stars.children.length -1;
 let isWinner = false;
+let isRestart = false;
 closeList.forEach(function(close){
     close.addEventListener('click', closeModal);
 });
@@ -65,6 +66,20 @@ let startMin = 0;
 let elapsedString = " ";
 function addTimer(){
 let x = setInterval(function(){
+  if(isRestart){
+    startSec = 0;
+    totalSec = 0;
+    startMin = 0;
+    elapsedString = " ";
+    NumberOfCardMatchedPair = 0;
+    cardMatched = 2;
+    seconds = 40;
+    for(let currentStarNumber = starNumber; currentStarNumber <= stars.children.length -1; currentStarNumber++ ){
+        stars.children[currentStarNumber].firstChild.classList.add('checked');
+    }
+    starNumber=stars.children.length -1;
+    isRestart = false;
+  }
   startSec++;
   totalSec++;
   if(startSec > 60){
@@ -110,6 +125,8 @@ function restartGame(){
           card.classList.remove('open', 'show', 'match');
       }
     });
+    openCardList = [];
+    isRestart = true;
 }
 
 function showCard(event){
@@ -157,7 +174,6 @@ function showCard(event){
 function closeModal(event){
   event.target.style.display = "none";
 }
-//add modal
 //add responsiveness
 
 /*
