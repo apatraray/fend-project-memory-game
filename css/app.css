@@ -22,6 +22,7 @@ body {
 }
 
 .container {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,7 +138,7 @@ h1 {
 
 .score-panel .timer {
     position: fixed;
-    left: 50%;
+    left: 55%;
     color: brown;
     font-size: 1em;
 }
@@ -187,4 +188,90 @@ h1 {
 
 .winningStars {
     color: red;
+}
+/*
+@media only screen and (min-width: 750px) and (max-width: 992px) {
+    .logo-image {
+        width: 20%;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .logo-image {
+        width: 30%;
+        margin-left: 20px;
+    }
+
+    a {
+        font-size: x-small;
+        font-weight: 100;
+        padding: 0;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .container {
+        width: 750px;
+    }
+
+    h3, h2 {
+        font-size: 30px;
+    }
+
+    .title-super {
+        font-size: 60px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .container {
+        width: 970px;
+    }
+}
+
+@media only screen and (min-width: 650px) {
+    .container {
+        width: 100%;
+        margin: 5px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .container {
+        width: 750px;
+    }
+    .score-panel .timer {
+        left: 50%;
+    }
+
+}
+*/
+
+@media only screen and (min-width: 700px) {
+    .container {
+        width: 100%;
+    }
+    .score-panel .timer {
+        left: 50%;
+    }
+}
+@media only screen and (min-width: 665px) {
+    .deck {
+        width: 600px;
+    }
+}
+@media only screen and (min-width: 350px) and (max-width: 665px){
+    .deck {
+        width: 300px;
+    }
+    .deck .card {
+        height: 60px;
+        width: 80px;
+    }
+    .score-panel {
+        width: 300px;
+        margin-bottom: 2px;
+    }
 }
