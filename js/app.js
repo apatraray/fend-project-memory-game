@@ -39,18 +39,29 @@ const allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
 const restart = document.querySelector('.fa-repeat');
 const stars = document.querySelector('.stars');
+const winBox = document.querySelector('#winBox');
+const failBox = document.querySelector('#failBox');
+const closeList = document.querySelectorAll('.close');
+const modalList = document.querySelectorAll('.modal');
 let openCardList = [];
 let NumberOfCardMatchedPair = 0;
 let NumberOfMoves = 0;
-let cardMatchedPairPerMoves = 0;
 let cardMatched = 2;
-let seconds = 60;
+let seconds = 40;
 let number=stars.children.length -1;
+let isWinner = false;
+closeList.forEach(function(close){
+    close.addEventListener('click', closeModal);
+});
+modalList.forEach(function(modal){
+    modal.addEventListener('click', closeModal);
+});
 //start timer when game starts
 let startSec = 0;
 let totalSec = 0;
 let startMin = 0;
 let elapsedString = " ";
+function addTimer(){
 let x = setInterval(function(){
   startSec++;
   totalSec++;
@@ -65,14 +76,17 @@ let x = setInterval(function(){
     elapsedString = "0"+startMin+":"+"0"+startSec;
   }
   timer.innerHTML = elapsedString;
-  if (totalSec > 180) {
+  if (totalSec > 120) {
     clearInterval(x);
     timer.innerHTML = '00:00';
-    //Display modal game over.
+    if(!isWinner){
+        failBox.style.display = "block";
+    }
   }
   updateStars();
 }, 1000);
-
+}
+addTimer();
 restart.addEventListener('click', restartGame);
 allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
@@ -84,6 +98,7 @@ function restartGame(){
       card.classList.remove('open', 'show', 'match');
     });
 }
+
 function showCard(event){
     NumberOfMoves++;
     moves.innerText = NumberOfMoves;
@@ -105,7 +120,8 @@ function showCard(event){
                openCardList[1].classList.add('match');
                NumberOfCardMatchedPair++;
                if(NumberOfCardMatchedPair == 8){
-                   console.log('all cards are mathched');//implement modal
+                   winBox.style.display = "block";
+                   isWinner = true;
             }
             openCardList[1].removeEventListener('click', showCard);
          }
@@ -120,13 +136,15 @@ function showCard(event){
    if(NumberOfCardMatchedPair < cardMatched && totalSec >= seconds){
       stars.children[number].firstChild.classList.remove('checked');
       cardMatched += 3;
-      seconds += 60;
+      seconds += 40;
       number--;
    }
  }
-//star should display correctly
+
+function closeModal(event){
+  event.target.style.display = "none";
+}
 //add modal
-//add timer restart to restart link
 //add responsiveness
 
 /*
