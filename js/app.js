@@ -52,8 +52,8 @@ const winningStars = document.querySelector('.win-stars');
 let openCardList = [];
 let numberOfCardMatchedPair = 0;
 let numberOfMoves = 0;
-let cardMatched = 2;
-let seconds = 40;
+let movesRequired = 10;
+let seconds = 30;
 let starNumber=stars.children.length -1;
 let isWinner = false;
 let isRestart = false;
@@ -77,8 +77,8 @@ let x = setInterval(function(){
         startMin = 0;
         elapsedString = " ";
         numberOfCardMatchedPair = 0;
-        cardMatched = 2;
-        seconds = 40;
+        movesRequired = 10;
+        seconds = 30;
         for(let currentStarNumber = starNumber; currentStarNumber <= stars.children.length -1; currentStarNumber++ ){
             stars.children[currentStarNumber].firstChild.classList.add('checked');
         }
@@ -103,13 +103,15 @@ let x = setInterval(function(){
         winningTime.innerHTML = elapsedString;
         winningStars.innerHTML = starNumber + 1;
     }
-    if(totalSec > 120){
+    if(totalSec > 90){
         clearInterval(x);
         if(!isWinner){
             failBox.style.display = "block";
         }
     }
-    updateStars();
+    if(totalSec >= seconds){
+        updateStars();
+    }
     }, 1000);
 }
 addTimer();
@@ -205,15 +207,15 @@ function restartGame(){
 }
 
 /*
-*  Update the stars based on the time taken to find the matched pair.
-*  - for each 40 seconds if there is less than 2 matched pairs done, then decrement the star rating.
+*  Update the stars based on the time taken and number of moves.
+*  - for each 30 seconds if there is less than 10 moves, decrease one star
 */
 
 function updateStars(){
-    if(numberOfCardMatchedPair < cardMatched && totalSec >= seconds){
+    if(numberOfMoves < movesRequired){
         stars.children[starNumber].firstChild.classList.remove('checked');
-        cardMatched += 3;
-        seconds += 40;
         starNumber--;
     }
+    movesRequired += 10;
+    seconds += 30;
 }
