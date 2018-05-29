@@ -7,6 +7,7 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
               'fa-cube', 'fa-cube', 'fa-bomb', 'fa-bomb',
               'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle'];
 const timer = document.querySelector('.timer');
+const gameDeck = document.querySelector('.deck');
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 
@@ -30,7 +31,6 @@ function shuffle(array) {
 */
 
 function initGame(){
-    const gameDeck = document.querySelector('.deck');
     shuffle(cards);
     const cardHtml = cards.map(function getCardTemplate(card){
         return `<li class="card"><i class="fa ${card}"></i></li>`;
@@ -39,7 +39,7 @@ function initGame(){
 }
 initGame();
 
-const allCardList = document.querySelectorAll('.card');
+let allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
 const restart = document.querySelector('.fa-repeat');
 const stars = document.querySelector('.stars');
@@ -67,6 +67,7 @@ let startSec = 0;
 let totalSec = 0;
 let startMin = 0;
 let elapsedString = " ";
+let gameFinish = false;
 function addTimer(){
 let x = setInterval(function(){
     if(isRestart){
@@ -106,6 +107,7 @@ let x = setInterval(function(){
         if(!isWinner){
             modalList[1].classList.add('fail-box');
         }
+        gameFinish = true;
     }
     if(totalSec >= seconds){
         updateStars();
@@ -195,12 +197,20 @@ restart.addEventListener('click', restartGame);
 function restartGame(){
     numberOfMoves = 0;
     moves.innerText = numberOfMoves;
+    while (gameDeck.hasChildNodes()) {
+        gameDeck.removeChild(gameDeck.firstChild);
+    }
+    initGame();
+    if(gameFinish === true || isWinner === true)
+    {
+        gameFinish = false;
+        isWinner = false;
+        starNumber++;
+        addTimer();
+    }
+    allCardList = document.querySelectorAll('.card');
     allCardList.forEach(function(card){
-        if(card.classList.contains('open')|| card.classList.contains('show') ||
-        card.classList.contains('match')){
-            card.addEventListener('click', showCard);
-            card.classList.remove('open', 'show', 'match');
-        }
+        card.addEventListener('click', showCard);
     });
     openCardList = [];
     isRestart = true;
