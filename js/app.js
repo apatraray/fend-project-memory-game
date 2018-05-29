@@ -43,8 +43,6 @@ const allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
 const restart = document.querySelector('.fa-repeat');
 const stars = document.querySelector('.stars');
-const winBox = document.querySelector('#win-box');
-const failBox = document.querySelector('#fail-box');
 const closeList = document.querySelectorAll('.close');
 const modalList = document.querySelectorAll('.modal');
 const winningTime = document.querySelector('.win-time');
@@ -106,7 +104,7 @@ let x = setInterval(function(){
     if(totalSec > 90){
         clearInterval(x);
         if(!isWinner){
-            failBox.style.display = "block";
+            modalList[1].classList.add('fail-box');
         }
     }
     if(totalSec >= seconds){
@@ -154,7 +152,7 @@ function checkMatchUnmatchedCard(newCard){
                     openCardList[1].classList.add('match');
                     numberOfCardMatchedPair++;
                     if(numberOfCardMatchedPair == 8){
-                        winBox.style.display = "block";
+                        modalList[0].classList.add('win-box');
                         isWinner = true;
                     }
                 }
