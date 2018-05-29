@@ -181,12 +181,14 @@ h1 {
     font-weight: bold;
 }
 
-#win-box {
+.win-box {
     background-color: lightgreen;
+    display: block;
 }
 
-#fail-box {
+.fail-box {
     background-color: #f97e72;
+    display: block;
 }
 
 .win-time {

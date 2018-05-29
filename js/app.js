@@ -7,6 +7,7 @@ const cards = ['fa-diamond', 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o
               'fa-cube', 'fa-cube', 'fa-bomb', 'fa-bomb',
               'fa-leaf', 'fa-leaf', 'fa-bicycle', 'fa-bicycle'];
 const timer = document.querySelector('.timer');
+const gameDeck = document.querySelector('.deck');
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 
@@ -30,7 +31,6 @@ function shuffle(array) {
 */
 
 function initGame(){
-    const gameDeck = document.querySelector('.deck');
     shuffle(cards);
     const cardHtml = cards.map(function getCardTemplate(card){
         return `<li class="card"><i class="fa ${card}"></i></li>`;
@@ -39,12 +39,10 @@ function initGame(){
 }
 initGame();
 
-const allCardList = document.querySelectorAll('.card');
+let allCardList = document.querySelectorAll('.card');
 const moves = document.querySelector('.moves');
 const restart = document.querySelector('.fa-repeat');
 const stars = document.querySelector('.stars');
-const winBox = document.querySelector('#win-box');
-const failBox = document.querySelector('#fail-box');
 const closeList = document.querySelectorAll('.close');
 const modalList = document.querySelectorAll('.modal');
 const winningTime = document.querySelector('.win-time');
@@ -52,8 +50,8 @@ const winningStars = document.querySelector('.win-stars');
 let openCardList = [];
 let numberOfCardMatchedPair = 0;
 let numberOfMoves = 0;
-let cardMatched = 2;
-let seconds = 40;
+let movesRequired = 10;
+let seconds = 30;
 let starNumber=stars.children.length -1;
 let isWinner = false;
 let isRestart = false;
@@ -69,6 +67,7 @@ let startSec = 0;
 let totalSec = 0;
 let startMin = 0;
 let elapsedString = " ";
+let gameFinish = false;
 function addTimer(){
 let x = setInterval(function(){
     if(isRestart){
@@ -77,8 +76,8 @@ let x = setInterval(function(){
         startMin = 0;
         elapsedString = " ";
         numberOfCardMatchedPair = 0;
-        cardMatched = 2;
-        seconds = 40;
+        movesRequired = 10;
+        seconds = 30;
         for(let currentStarNumber = starNumber; currentStarNumber <= stars.children.length -1; currentStarNumber++ ){
             stars.children[currentStarNumber].firstChild.classList.add('checked');
         }
@@ -103,24 +102,29 @@ let x = setInterval(function(){
         winningTime.innerHTML = elapsedString;
         winningStars.innerHTML = starNumber + 1;
     }
-    if(totalSec > 120){
+    if(totalSec > 90){
         clearInterval(x);
         if(!isWinner){
-            failBox.style.display = "block";
+            modalList[1].classList.add('fail-box');
         }
+        gameFinish = true;
     }
-    updateStars();
+    if(totalSec >= seconds){
+        updateStars();
+    }
     }, 1000);
 }
 addTimer();
 
 /*
  *  Add event listener for each card
- *   - If user clicks the card, open and show the card
- *   - If there is only one card open, remove event listener for that cards
- *   - If both card are open and they match, remove the event listener for this card too.
- *   - If both card are open and they unmatch, add the event listener for the previous open card.
- *   - If both card are open, shake the cards and openCardList array as empty.
+ *   - If user clicks the card and if the card has classlist other than card or
+       card shake, do nothing
+ *   - Otherwise, increase the number of moves by 1, open the card and if there
+       are two cards open, check if they are matched or unmatched.
+ *   - If both card are match, keep the cards open and shake.
+ *   - If both card are unmatched, flip back the card and shake.
+ *   - Make the openCardList array as empty.
  *   - If all cards are matched, display a message with the final score
 */
 
@@ -128,30 +132,31 @@ allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
 });
 function showCard(event){
-    numberOfMoves++;
-    moves.innerText = numberOfMoves;
-    event.target.classList.add('open', 'show');
+    const isOpenShowClass = event.target.classList.value;
+    if(isOpenShowClass === 'card'|| isOpenShowClass === 'card shake'){
+        numberOfMoves++;
+        moves.innerText = numberOfMoves;
+        event.target.classList.add('open', 'show');
+        checkMatchUnmatchedCard(event.target);
+    }
+}
+function checkMatchUnmatchedCard(newCard){
     setTimeout(function checkMatchCard(){
-        openCardList.push(event.target);
+        openCardList.push(newCard);
         openCardList.forEach(function(card){
-            if(openCardList.length == 1){
-                event.target.removeEventListener('click', showCard);
-            }
-            else if(openCardList.length == 2){
+            if(openCardList.length == 2){
                 if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
                     openCardList[0].classList.remove('open', 'show');
                     openCardList[1].classList.remove('open', 'show');
-                    openCardList[0].addEventListener('click', showCard);
                 }
                 else{
                     openCardList[0].classList.add('match');
                     openCardList[1].classList.add('match');
                     numberOfCardMatchedPair++;
                     if(numberOfCardMatchedPair == 8){
-                        winBox.style.display = "block";
+                        modalList[0].classList.add('win-box');
                         isWinner = true;
                     }
-                    openCardList[1].removeEventListener('click', showCard);
                 }
             openCardList[0].classList.add('shake');
             openCardList[1].classList.add('shake');
@@ -160,7 +165,6 @@ function showCard(event){
         });
     }, 1000);
 }
-
 /*
 * add event listener to close link
 *   - close modal when clicked on close link
@@ -193,27 +197,35 @@ restart.addEventListener('click', restartGame);
 function restartGame(){
     numberOfMoves = 0;
     moves.innerText = numberOfMoves;
+    while (gameDeck.hasChildNodes()) {
+        gameDeck.removeChild(gameDeck.firstChild);
+    }
+    initGame();
+    if(gameFinish === true || isWinner === true)
+    {
+        gameFinish = false;
+        isWinner = false;
+        starNumber++;
+        addTimer();
+    }
+    allCardList = document.querySelectorAll('.card');
     allCardList.forEach(function(card){
-        if(card.classList.contains('open')|| card.classList.contains('show') ||
-        card.classList.contains('match')){
-            card.addEventListener('click', showCard);
-            card.classList.remove('open', 'show', 'match');
-        }
+        card.addEventListener('click', showCard);
     });
     openCardList = [];
     isRestart = true;
 }
 
 /*
-*  Update the stars based on the time taken to find the matched pair.
-*  - for each 40 seconds if there is less than 2 matched pairs done, then decrement the star rating.
+*  Update the stars based on the time taken and number of moves.
+*  - for each 30 seconds if there is less than 10 moves, decrease one star
 */
 
 function updateStars(){
-    if(numberOfCardMatchedPair < cardMatched && totalSec >= seconds){
+    if(numberOfMoves < movesRequired){
         stars.children[starNumber].firstChild.classList.remove('checked');
-        cardMatched += 3;
-        seconds += 40;
         starNumber--;
     }
+    movesRequired += 10;
+    seconds += 30;
 }
