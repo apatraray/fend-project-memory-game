@@ -118,11 +118,13 @@ addTimer();
 
 /*
  *  Add event listener for each card
- *   - If user clicks the card, open and show the card
- *   - If there is only one card open, remove event listener for that cards
- *   - If both card are open and they match, remove the event listener for this card too.
- *   - If both card are open and they unmatch, add the event listener for the previous open card.
- *   - If both card are open, shake the cards and openCardList array as empty.
+ *   - If user clicks the card and if the card has classlist other than card or
+       card shake, do nothing
+ *   - Otherwise, increase the number of moves by 1, open the card and if there
+       are two cards open, check if they are matched or unmatched.
+ *   - If both card are match, keep the cards open and shake.
+ *   - If both card are unmatched, flip back the card and shake.
+ *   - Make the openCardList array as empty.
  *   - If all cards are matched, display a message with the final score
 */
 
@@ -130,20 +132,22 @@ allCardList.forEach(function(card){
     card.addEventListener('click', showCard);
 });
 function showCard(event){
-    numberOfMoves++;
-    moves.innerText = numberOfMoves;
-    event.target.classList.add('open', 'show');
+    const isOpenShowClass = event.target.classList.value;
+    if(isOpenShowClass === 'card'|| isOpenShowClass === 'card shake'){
+        numberOfMoves++;
+        moves.innerText = numberOfMoves;
+        event.target.classList.add('open', 'show');
+        checkMatchUnmatchedCard(event.target);
+    }
+}
+function checkMatchUnmatchedCard(newCard){
     setTimeout(function checkMatchCard(){
-        openCardList.push(event.target);
+        openCardList.push(newCard);
         openCardList.forEach(function(card){
-            if(openCardList.length == 1){
-                event.target.removeEventListener('click', showCard);
-            }
-            else if(openCardList.length == 2){
+            if(openCardList.length == 2){
                 if(openCardList[0].children[0].className !== openCardList[1].children[0].className){
                     openCardList[0].classList.remove('open', 'show');
                     openCardList[1].classList.remove('open', 'show');
-                    openCardList[0].addEventListener('click', showCard);
                 }
                 else{
                     openCardList[0].classList.add('match');
@@ -153,7 +157,6 @@ function showCard(event){
                         winBox.style.display = "block";
                         isWinner = true;
                     }
-                    openCardList[1].removeEventListener('click', showCard);
                 }
             openCardList[0].classList.add('shake');
             openCardList[1].classList.add('shake');
@@ -162,7 +165,6 @@ function showCard(event){
         });
     }, 1000);
 }
-
 /*
 * add event listener to close link
 *   - close modal when clicked on close link
