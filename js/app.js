@@ -55,7 +55,7 @@ let seconds = 30;
 let starNumber=stars.children.length -1;
 let isWinner = false;
 let isRestart = false;
-
+let firstClick = false;
 /*
  * start timer when game starts
  *   - If user chooses restart, restart the timer, restart the star rating
@@ -114,7 +114,6 @@ let x = setInterval(function(){
     }
     }, 1000);
 }
-addTimer();
 
 /*
  *  Add event listener for each card
@@ -133,6 +132,11 @@ allCardList.forEach(function(card){
 });
 function showCard(event){
     const isOpenShowClass = event.target.classList.value;
+    if(firstClick === false){
+        firstClick = true;
+        addTimer();
+    }
+
     if(isOpenShowClass === 'card'|| isOpenShowClass === 'card shake'){
         numberOfMoves++;
         moves.innerText = numberOfMoves;
@@ -196,6 +200,7 @@ function closeModal(event){
 restart.addEventListener('click', restartGame);
 function restartGame(){
     numberOfMoves = 0;
+    firstClick = false;
     moves.innerText = numberOfMoves;
     while (gameDeck.hasChildNodes()) {
         gameDeck.removeChild(gameDeck.firstChild);
